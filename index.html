@@ -7,11 +7,11 @@
 
 <style>
 :root{
-  --bg:#040713;
+  --bg:#020617;
   --glass:rgba(255,255,255,.06);
   --border:rgba(255,255,255,.15);
-  --primary:#6366f1;
-  --accent:#a855f7;
+  --primary:#7c3aed;
+  --accent:#6366f1;
   --text:#f8fafc;
   --muted:#94a3b8;
 }
@@ -25,140 +25,109 @@
 
 body{
   min-height:100vh;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(99,102,241,.35), transparent 40%),
-    radial-gradient(circle at 85% 90%, rgba(168,85,247,.25), transparent 40%),
-    var(--bg);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:40px 18px;
-  color:var(--text);
-  overflow:hidden;
-}
-
-/* Floating background animation */
-body::before{
-  content:"";
-  position:absolute;
-  width:600px;
-  height:600px;
-  background:radial-gradient(circle,rgba(99,102,241,.15),transparent 70%);
-  top:-200px;
-  left:-200px;
-  animation:floatBg 12s infinite alternate ease-in-out;
-}
-@keyframes floatBg{
-  from{transform:translate(0,0);}
-  to{transform:translate(100px,60px);}
-}
-
-/* Loader */
-#loader{
-  position:fixed;
-  inset:0;
   background:var(--bg);
+  color:var(--text);
   display:flex;
   justify-content:center;
-  align-items:center;
-  z-index:9999;
-  transition:.6s;
+  padding:60px 18px;
+  position:relative;
+  overflow-x:hidden; /* allow vertical scroll */
 }
-.spinner{
-  width:45px;
-  height:45px;
-  border:3px solid transparent;
-  border-top-color:var(--primary);
-  border-radius:50%;
-  animation:spin .8s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-.loaded #loader{opacity:0;visibility:hidden;}
 
-/* Install overlay */
-#install-overlay{
+/* ---------- STARFIELD BACKGROUND ---------- */
+
+.stars{
   position:fixed;
   inset:0;
-  background:rgba(4,7,19,.85);
-  backdrop-filter:blur(14px);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  opacity:0;
-  visibility:hidden;
-  transition:.3s;
-  z-index:9000;
-}
-#install-overlay.active{opacity:1;visibility:visible;}
-.install-text{
-  margin-top:18px;
-  letter-spacing:.12em;
-  font-size:.85rem;
-  color:var(--text);
+  z-index:-2;
+  background:
+    radial-gradient(2px 2px at 20% 30%, white, transparent),
+    radial-gradient(1.5px 1.5px at 70% 80%, white, transparent),
+    radial-gradient(1px 1px at 40% 60%, white, transparent),
+    radial-gradient(2px 2px at 90% 20%, white, transparent),
+    radial-gradient(1.5px 1.5px at 10% 70%, white, transparent);
+  animation:twinkle 6s infinite alternate ease-in-out;
 }
 
-/* Card */
+@keyframes twinkle{
+  from{opacity:.6;}
+  to{opacity:1;}
+}
+
+/* Shooting stars */
+.shooting-star{
+  position:fixed;
+  top:-10px;
+  width:2px;
+  height:120px;
+  background:linear-gradient(white, transparent);
+  opacity:.7;
+  transform:rotate(20deg);
+  animation:fall linear infinite;
+  z-index:-1;
+}
+
+.shooting-star:nth-child(1){
+  left:15%;
+  animation-duration:8s;
+  animation-delay:2s;
+}
+
+.shooting-star:nth-child(2){
+  left:70%;
+  animation-duration:10s;
+  animation-delay:5s;
+}
+
+.shooting-star:nth-child(3){
+  left:45%;
+  animation-duration:12s;
+  animation-delay:8s;
+}
+
+@keyframes fall{
+  0%{transform:translateY(-150px) rotate(20deg); opacity:0;}
+  10%{opacity:1;}
+  100%{transform:translateY(110vh) rotate(20deg); opacity:0;}
+}
+
+/* ---------- CARD ---------- */
+
 .card{
   width:100%;
   max-width:540px;
   background:var(--glass);
-  backdrop-filter:blur(28px);
+  backdrop-filter:blur(30px);
   border-radius:32px;
   padding:50px 28px;
   border:1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.05),
-    0 40px 80px rgba(0,0,0,.6);
+  box-shadow:0 40px 80px rgba(0,0,0,.6);
   text-align:center;
   position:relative;
-  animation:floatCard 6s ease-in-out infinite alternate;
-  opacity:0;
-  transform:translateY(40px);
-  transition:1s cubic-bezier(.16,1,.3,1);
-}
-.loaded .card{opacity:1;transform:translateY(0);}
-@keyframes floatCard{
-  from{transform:translateY(0);}
-  to{transform:translateY(-12px);}
 }
 
-/* Logo */
-.logo-wrap{
-  position:relative;
-  margin-bottom:30px;
-}
-.logo-glow{
-  position:absolute;
-  inset:-15px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  filter:blur(30px);
-  opacity:.4;
-  border-radius:40px;
-}
 .logo{
   width:120px;
   height:120px;
-  border-radius:32px;
+  border-radius:30px;
+  margin-bottom:25px;
   border:1px solid rgba(255,255,255,.2);
-  object-fit:cover;
-  position:relative;
 }
 
-/* Title */
 h1{
-  font-size:2.2rem;
-  font-weight:700;
+  font-size:2rem;
   margin-bottom:8px;
-  background:linear-gradient(90deg,#fff,#c7d2fe,#f0abfc,#fff);
-  background-size:200% auto;
+  background:linear-gradient(90deg,#fff,#c7d2fe,#a5b4fc,#fff);
+  background-size:200%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   animation:shine 6s linear infinite;
 }
+
 @keyframes shine{
   to{background-position:200% center;}
 }
+
 .subtitle{
   font-size:.75rem;
   letter-spacing:.25em;
@@ -167,32 +136,35 @@ h1{
   margin-bottom:35px;
 }
 
-/* Grid */
+/* Buttons */
+
 .grid{
   display:grid;
   gap:16px;
 }
+
 @media(min-width:450px){
   .grid{grid-template-columns:repeat(2,1fr);}
 }
 
-/* Buttons */
 .install-btn{
   padding:20px;
   border-radius:20px;
   background:rgba(255,255,255,.05);
   border:1px solid var(--border);
   cursor:pointer;
-  transition:.35s cubic-bezier(.34,1.56,.64,1);
-  position:relative;
-  overflow:hidden;
+  transition:.3s ease;
 }
+
 .install-btn:hover{
-  transform:translateY(-6px) scale(1.03);
-  box-shadow:0 15px 35px rgba(99,102,241,.35);
+  transform:translateY(-6px);
+  box-shadow:0 15px 35px rgba(124,58,237,.4);
   border-color:var(--primary);
 }
-.install-btn:active{transform:scale(.95);}
+
+.install-btn:active{
+  transform:scale(.95);
+}
 
 .btn-id{
   font-size:10px;
@@ -201,13 +173,13 @@ h1{
   color:var(--primary);
   opacity:.8;
 }
+
 .btn-label{
   margin-top:6px;
   font-size:1rem;
   font-weight:600;
 }
 
-/* Footer */
 .footer{
   margin-top:45px;
   font-size:10px;
@@ -219,21 +191,17 @@ h1{
 </head>
 <body>
 
-<div id="loader"><div class="spinner"></div></div>
+<div class="stars"></div>
 
-<div id="install-overlay">
-  <div class="spinner"></div>
-  <div class="install-text">REQUESTING INSTALLATION</div>
-</div>
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
+<div class="shooting-star"></div>
 
 <div class="card">
-  <div class="logo-wrap">
-    <div class="logo-glow"></div>
-    <img class="logo" src="https://github.com/8ygh/global/releases/download/icon/icon.png">
-  </div>
+  <img class="logo" src="https://github.com/8ygh/global/releases/download/icon/icon.png">
 
   <h1>Ronix iOS Global</h1>
-  <div class="subtitle">Enterprise Installation Portal</div>
+  <div class="subtitle">Interstellar Installation Portal</div>
 
   <div class="grid">
     <div class="install-btn" data-file="Commission.plist"><div class="btn-id">REF_01</div><div class="btn-label">Commission</div></div>
@@ -250,21 +218,11 @@ h1{
 </div>
 
 <script>
-window.addEventListener("load",()=>{
-  setTimeout(()=>document.body.classList.add("loaded"),500);
-});
-
-const overlay=document.getElementById("install-overlay");
-
 document.querySelectorAll(".install-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    overlay.classList.add("active");
     const file=btn.dataset.file;
     const url=`itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/8ygh/global/main/${file}`;
-    setTimeout(()=>{
-      window.location.href=url;
-      setTimeout(()=>overlay.classList.remove("active"),3000);
-    },250);
+    window.location.href=url;
   });
 });
 </script>
