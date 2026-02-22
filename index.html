@@ -71,6 +71,8 @@ body{
     0 0 0 1px rgba(255,255,255,.04),
     0 40px 90px rgba(75,0,130,.45);
   text-align:center;
+  position:relative;
+  z-index:1;
 }
 
 /* Logo */
@@ -154,16 +156,35 @@ h1{
   opacity:.6;
 }
 
-/* ===== FALLING STAR DOTS ===== */
-.falling-dot{
+/* ===== OVERLAY ===== */
+#install-overlay{
   position:fixed;
-  width:3px;
-  height:3px;
+  inset:0;
+  background:rgba(0,0,0,0.8);
+  backdrop-filter:blur(10px);
+  z-index:50;
+  display:none;
+  overflow:hidden;
+}
+
+#overlay-canvas{
+  position:absolute;
+  inset:0;
+  z-index:51;
+}
+
+#overlay-close{
+  position:absolute;
+  top:20px;
+  right:20px;
   background:rgba(139,92,246,0.8);
-  border-radius:50%;
-  z-index:10;
-  pointer-events:none;
-  opacity:0.8;
+  border:none;
+  border-radius:12px;
+  padding:10px 15px;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:60;
 }
 </style>
 </head>
@@ -192,6 +213,12 @@ h1{
   <div class="footer">RONIX GLOBAL INSTALL SYSTEM</div>
 </div>
 
+<!-- Overlay for install -->
+<div id="install-overlay">
+  <canvas id="overlay-canvas"></canvas>
+  <button id="overlay-close">Close</button>
+</div>
+
 <script>
 /* ===== STARFIELD ===== */
 const canvas = document.getElementById("starfield");
@@ -205,7 +232,7 @@ resize();
 window.addEventListener("resize", resize);
 
 let stars = [];
-for(let i=0;i<200;i++){
+for(let i=0;i<400;i++){
   stars.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
@@ -230,42 +257,96 @@ function animate(){
 }
 animate();
 
-/* ===== FALLING STAR DOTS ===== */
-function fallingDot(){
-  const dot=document.createElement("div");
-  dot.className="falling-dot";
-  dot.style.left=Math.random()*window.innerWidth+"px";
-  dot.style.top="-10px";
-  document.body.appendChild(dot);
+/* ===== INSTALL OVERLAY ===== */
+const installOverlay = document.getElementById('install-overlay');
+const overlayCanvas = document.getElementById('overlay-canvas');
+const overlayCtx = overlayCanvas.getContext('2d');
 
-  let speed = 1 + Math.random()*2;
-  let opacity = 0.7 + Math.random()*0.3;
-  dot.style.opacity = opacity;
+function resizeOverlay(){
+  overlayCanvas.width = window.innerWidth;
+  overlayCanvas.height = window.innerHeight;
+}
+resizeOverlay();
+window.addEventListener("resize", resizeOverlay);
 
-  function move(){
-    let top = parseFloat(dot.style.top);
-    if(top < window.innerHeight){
-      dot.style.top = top + speed + "px";
-      requestAnimationFrame(move);
-    } else {
-      dot.remove();
-    }
+// Stars + Twinkles + Clouds
+let overlayStars = [];
+let clouds = [];
+
+function createOverlayElements(){
+  overlayStars=[];
+  clouds=[];
+  for(let i=0;i<200;i++){
+    overlayStars.push({
+      x:Math.random()*overlayCanvas.width,
+      y:Math.random()*overlayCanvas.height,
+      r:1 + Math.random()*2,
+      a:Math.random(),
+      s:0.01 + Math.random()*0.02,
+      fall:0.5 + Math.random()*1
+    });
   }
-  move();
+  for(let i=0;i<3;i++){ // 3 faint nebula clouds
+    clouds.push({
+      x:Math.random()*overlayCanvas.width,
+      y:Math.random()*overlayCanvas.height/2,
+      r:overlayCanvas.width*0.6,
+      a:0.05 + Math.random()*0.05,
+      dx:0.1 + Math.random()*0.2,
+      dy:0.05 + Math.random()*0.1
+    });
+  }
 }
 
-setInterval(()=>{
-  if(Math.random()>0.5) fallingDot();
-},300);
+function animateOverlay(){
+  overlayCtx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
 
-/* ===== INSTALL BUTTONS ===== */
+  // Draw clouds
+  clouds.forEach(c=>{
+    overlayCtx.beginPath();
+    const grad = overlayCtx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+    grad.addColorStop(0, `rgba(139,92,246,${c.a})`);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    overlayCtx.fillStyle = grad;
+    overlayCtx.fill();
+    c.x += c.dx;
+    c.y += c.dy;
+    if(c.x-c.r>overlayCanvas.width) c.x = -c.r;
+    if(c.y-c.r>overlayCanvas.height) c.y = -c.r/2;
+  });
+
+  // Draw stars
+  overlayStars.forEach(star=>{
+    star.a += star.s;
+    if(star.a<=0||star.a>=1) star.s*=-1;
+
+    star.y += star.fall;
+    if(star.y > overlayCanvas.height) star.y = -2;
+
+    overlayCtx.beginPath();
+    overlayCtx.arc(star.x,star.y,star.r,0,Math.PI*2);
+    overlayCtx.fillStyle=`hsla(270,80%,80%,${star.a})`;
+    overlayCtx.fill();
+  });
+
+  requestAnimationFrame(animateOverlay);
+}
+
 document.querySelectorAll(".install-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
+    installOverlay.style.display="block";
+    createOverlayElements();
+    animateOverlay();
     const file=btn.dataset.file;
-    const url=`itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/8ygh/global/main/${file}`;
-    window.location.href=url;
+    console.log("Installing: "+file);
   });
 });
+
+// Close overlay
+document.getElementById("overlay-close").addEventListener("click",()=>{
+  installOverlay.style.display="none";
+});
+
 </script>
 
 </body>
