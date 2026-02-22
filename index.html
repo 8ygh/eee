@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ronix iOS Global</title>
-
 <style>
 :root{
   --glass: rgba(15, 10, 30, 0.75);
@@ -15,177 +14,30 @@
   --nebula: radial-gradient(circle at center, #1b0a3b 0%, #0a0518 90%);
 }
 
-/* Reset */
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;}
+body{min-height:100vh;background:#01000d;color:var(--text);display:flex;justify-content:center;align-items:flex-start;padding:70px 18px;overflow-x:hidden;position:relative;}
 
-body{
-  min-height:100vh;
-  background:#01000d;
-  color:var(--text);
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  padding:70px 18px;
-  overflow-x:hidden;
-  position:relative;
-}
+/* Background */
+#starfield{position:fixed;inset:0;z-index:-3;background:var(--nebula);}
+.ripple-layer{position:fixed;inset:0;z-index:-2;background: radial-gradient(circle at center, rgba(139,92,246,0.05), transparent 80%);animation:rippleMove 12s infinite alternate ease-in-out;pointer-events:none;}
+@keyframes rippleMove{0%{transform:scale(1);}100%{transform:scale(1.25);}}
 
-/* ===== CANVAS BACKGROUND ===== */
-#starfield{
-  position:fixed;
-  inset:0;
-  z-index:-3;
-  background:var(--nebula);
-}
+/* Card */
+.card{width:100%;max-width:540px;background:var(--glass);backdrop-filter:blur(40px) saturate(140%);-webkit-backdrop-filter:blur(40px) saturate(140%);border-radius:34px;padding:55px 30px;border:1px solid var(--border);box-shadow:0 0 0 1px rgba(255,255,255,.04),0 40px 90px rgba(0,0,0,.65);text-align:center;position:relative;z-index:1;}
+.logo{width:130px;height:130px;border-radius:32px;margin-bottom:28px;border:1px solid rgba(255,255,255,.25);box-shadow:0 0 35px rgba(139,92,246,.5);}
+h1{font-size:2.1rem;margin-bottom:10px;background:linear-gradient(90deg,#fff,#c4b5fd,#ddd6fe,#fff);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 6s linear infinite;}
+@keyframes shine{to{background-position:200% center;}}
+.subtitle{font-size:.75rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);margin-bottom:40px;}
+.grid{display:grid;gap:18px;}
+.install-btn{padding:22px;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);cursor:pointer;transition:.35s cubic-bezier(.34,1.56,.64,1);backdrop-filter:blur(20px);}
+.install-btn:hover{transform:translateY(-6px);box-shadow:0 15px 35px rgba(139,92,246,.4);border-color:var(--primary);}
+.install-btn:active{transform:scale(.95);}
+.btn-id{font-size:11px;font-family:monospace;letter-spacing:.18em;color:var(--primary);opacity:.85;}
+.btn-label{margin-top:8px;font-size:1.05rem;font-weight:600;}
+.footer{margin-top:50px;font-size:10px;letter-spacing:.25em;color:var(--muted);opacity:.6;}
 
-.ripple-layer{
-  position:fixed;
-  inset:0;
-  z-index:-2;
-  background: radial-gradient(circle at center, rgba(139,92,246,0.05), transparent 80%);
-  animation:rippleMove 12s infinite alternate ease-in-out;
-  pointer-events:none;
-}
-
-@keyframes rippleMove{
-  0%{transform:scale(1);}
-  100%{transform:scale(1.25);}
-}
-
-/* ===== CARD ===== */
-.card{
-  width:100%;
-  max-width:540px;
-  background:rgba(20, 10, 35, 0.85);
-  backdrop-filter:blur(40px) saturate(140%);
-  -webkit-backdrop-filter:blur(40px) saturate(140%);
-  border-radius:34px;
-  padding:55px 30px;
-  border:1px solid var(--border);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.04),
-    0 40px 90px rgba(75,0,130,.45);
-  text-align:center;
-  position:relative;
-  z-index:1;
-}
-
-/* Logo */
-.logo{
-  width:130px;
-  height:130px;
-  border-radius:32px;
-  margin-bottom:28px;
-  border:1px solid rgba(255,255,255,.25);
-  box-shadow:0 0 45px rgba(139,92,246,.7);
-}
-
-/* Title */
-h1{
-  font-size:2.1rem;
-  margin-bottom:10px;
-  background:linear-gradient(90deg,#5b21b6,#7c3aed,#8b5cf6,#7c3aed);
-  background-size:200%;
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-  animation:shine 6s linear infinite;
-}
-
-@keyframes shine{
-  to{background-position:200% center;}
-}
-
-.subtitle{
-  font-size:.75rem;
-  letter-spacing:.28em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:40px;
-}
-
-/* Buttons */
-.grid{
-  display:grid;
-  gap:18px;
-}
-
-.install-btn{
-  padding:22px;
-  border-radius:22px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.15);
-  cursor:pointer;
-  transition:.35s cubic-bezier(.34,1.56,.64,1);
-  backdrop-filter:blur(20px);
-}
-
-.install-btn:hover{
-  transform:translateY(-6px);
-  box-shadow:0 15px 35px rgba(139,92,246,.5);
-  border-color:var(--primary);
-}
-
-.install-btn:active{
-  transform:scale(.95);
-}
-
-.btn-id{
-  font-size:11px;
-  font-family:monospace;
-  letter-spacing:.18em;
-  color:var(--primary);
-  opacity:.85;
-}
-
-.btn-label{
-  margin-top:8px;
-  font-size:1.05rem;
-  font-weight:600;
-}
-
-.footer{
-  margin-top:50px;
-  font-size:10px;
-  letter-spacing:.25em;
-  color:var(--muted);
-  opacity:.6;
-}
-
-/* ===== OVERLAY ===== */
-#install-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.8);
-  backdrop-filter:blur(10px);
-  z-index:50;
-  display:none;
-  overflow:hidden;
-}
-
-#overlay-canvas{
-  position:absolute;
-  inset:0;
-  z-index:51;
-}
-
-#overlay-close{
-  position:absolute;
-  top:20px;
-  right:20px;
-  background:rgba(139,92,246,0.8);
-  border:none;
-  border-radius:12px;
-  padding:10px 15px;
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  z-index:60;
-}
+/* Overlay canvas */
+#overlay-canvas{position:fixed;inset:0;pointer-events:none;z-index:49;}
 </style>
 </head>
 <body>
@@ -195,10 +47,8 @@ h1{
 
 <div class="card">
   <img class="logo" src="https://github.com/8ygh/global/releases/download/icon/icon.png">
-
   <h1>Ronix iOS Global</h1>
   <div class="subtitle">Interstellar Installation Portal</div>
-
   <div class="grid">
     <div class="install-btn" data-file="Commission.plist"><div class="btn-id">REF_01</div><div class="btn-label">Commission</div></div>
     <div class="install-btn" data-file="Forevermark.plist"><div class="btn-id">REF_02</div><div class="btn-label">Forevermark</div></div>
@@ -209,145 +59,42 @@ h1{
     <div class="install-btn" data-file="Telecom.plist"><div class="btn-id">REF_07</div><div class="btn-label">Telecom</div></div>
     <div class="install-btn" data-file="Tianjin.plist"><div class="btn-id">REF_08</div><div class="btn-label">Tianjin</div></div>
   </div>
-
   <div class="footer">RONIX GLOBAL INSTALL SYSTEM</div>
 </div>
 
-<!-- Overlay for install -->
-<div id="install-overlay">
-  <canvas id="overlay-canvas"></canvas>
-  <button id="overlay-close">Close</button>
-</div>
+<canvas id="overlay-canvas"></canvas>
 
 <script>
-/* ===== STARFIELD ===== */
-const canvas = document.getElementById("starfield");
-const ctx = canvas.getContext("2d");
-
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener("resize", resize);
-
-let stars = [];
-for(let i=0;i<400;i++){
-  stars.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    r:Math.random()*1.5,
-    a:Math.random(),
-    s:Math.random()*0.02
-  });
-}
-
-function animate(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  stars.forEach(star=>{
-    star.a+=star.s;
-    if(star.a<=0||star.a>=1) star.s*=-1;
-
-    ctx.beginPath();
-    ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-    ctx.fillStyle=`hsla(270,80%,80%,${star.a})`;
-    ctx.fill();
-  });
-  requestAnimationFrame(animate);
-}
+// Background starfield
+const canvas=document.getElementById("starfield"); const ctx=canvas.getContext("2d");
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+resize(); window.addEventListener("resize",resize);
+let stars=[]; for(let i=0;i<400;i++){stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5,a:Math.random(),s:Math.random()*0.02});}
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.a+=s.s;if(s.a<=0||s.a>=1)s.s*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`hsla(270,80%,80%,${s.a})`;ctx.fill();});requestAnimationFrame(animate);}
 animate();
 
-/* ===== INSTALL OVERLAY ===== */
-const installOverlay = document.getElementById('install-overlay');
-const overlayCanvas = document.getElementById('overlay-canvas');
-const overlayCtx = overlayCanvas.getContext('2d');
+// Overlay stars on install click
+const overlayCanvas=document.getElementById("overlay-canvas"); const overlayCtx=overlayCanvas.getContext("2d");
+function resizeOverlay(){overlayCanvas.width=window.innerWidth;overlayCanvas.height=window.innerHeight;}
+resizeOverlay(); window.addEventListener("resize",resizeOverlay);
 
-function resizeOverlay(){
-  overlayCanvas.width = window.innerWidth;
-  overlayCanvas.height = window.innerHeight;
-}
-resizeOverlay();
-window.addEventListener("resize", resizeOverlay);
-
-// Stars + Twinkles + Clouds
-let overlayStars = [];
-let clouds = [];
-
-function createOverlayElements(){
-  overlayStars=[];
-  clouds=[];
-  for(let i=0;i<200;i++){
-    overlayStars.push({
-      x:Math.random()*overlayCanvas.width,
-      y:Math.random()*overlayCanvas.height,
-      r:1 + Math.random()*2,
-      a:Math.random(),
-      s:0.01 + Math.random()*0.02,
-      fall:0.5 + Math.random()*1
-    });
-  }
-  for(let i=0;i<3;i++){ // 3 faint nebula clouds
-    clouds.push({
-      x:Math.random()*overlayCanvas.width,
-      y:Math.random()*overlayCanvas.height/2,
-      r:overlayCanvas.width*0.6,
-      a:0.05 + Math.random()*0.05,
-      dx:0.1 + Math.random()*0.2,
-      dy:0.05 + Math.random()*0.1
-    });
-  }
-}
-
-function animateOverlay(){
-  overlayCtx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
-
-  // Draw clouds
-  clouds.forEach(c=>{
-    overlayCtx.beginPath();
-    const grad = overlayCtx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
-    grad.addColorStop(0, `rgba(139,92,246,${c.a})`);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
-    overlayCtx.fillStyle = grad;
-    overlayCtx.fill();
-    c.x += c.dx;
-    c.y += c.dy;
-    if(c.x-c.r>overlayCanvas.width) c.x = -c.r;
-    if(c.y-c.r>overlayCanvas.height) c.y = -c.r/2;
-  });
-
-  // Draw stars
-  overlayStars.forEach(star=>{
-    star.a += star.s;
-    if(star.a<=0||star.a>=1) star.s*=-1;
-
-    star.y += star.fall;
-    if(star.y > overlayCanvas.height) star.y = -2;
-
-    overlayCtx.beginPath();
-    overlayCtx.arc(star.x,star.y,star.r,0,Math.PI*2);
-    overlayCtx.fillStyle=`hsla(270,80%,80%,${star.a})`;
-    overlayCtx.fill();
-  });
-
-  requestAnimationFrame(animateOverlay);
-}
+function createOverlayStars(){let arr=[];for(let i=0;i<150;i++){arr.push({x:Math.random()*overlayCanvas.width,y:Math.random()*overlayCanvas.height,r:0.5+Math.random()*1,a:Math.random(),s:0.002+Math.random()*0.004,fall:0.2+Math.random()*0.4});}return arr;}
+let overlayStars=[]; let overlayAnimating=false;
+function animateOverlay(){if(!overlayAnimating)return;overlayCtx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);overlayStars.forEach(star=>{star.a+=star.s;if(star.a<=0||star.a>=1)star.s*=-1;star.y+=star.fall;if(star.y>overlayCanvas.height)star.y=-2;overlayCtx.beginPath();overlayCtx.arc(star.x,star.y,star.r,0,Math.PI*2);overlayCtx.fillStyle=`hsla(270,80%,80%,${star.a})`;overlayCtx.fill();});requestAnimationFrame(animateOverlay);}
 
 document.querySelectorAll(".install-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
-    installOverlay.style.display="block";
-    createOverlayElements();
+    overlayStars=createOverlayStars();
+    overlayAnimating=true;
     animateOverlay();
+    // Trigger iOS install directly
     const file=btn.dataset.file;
-    console.log("Installing: "+file);
+    const url=`itms-services://?action=download-manifest&url=https://raw.githubusercontent.com/8ygh/global/main/${file}`;
+    window.location.href=url;
+    // Stop overlay stars after 4 seconds
+    setTimeout(()=>{overlayAnimating=false; overlayCtx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);},4000);
   });
 });
-
-// Close overlay
-document.getElementById("overlay-close").addEventListener("click",()=>{
-  installOverlay.style.display="none";
-});
-
 </script>
-
 </body>
 </html>
