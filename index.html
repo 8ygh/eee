@@ -7,13 +7,15 @@
 
 <style>
 :root{
-  --glass: rgba(15, 23, 42, 0.72);
+  --glass: rgba(25, 15, 42, 0.72);
   --border: rgba(255,255,255,0.18);
   --primary: #8b5cf6;
   --text: #f8fafc;
-  --muted: #94a3b8;
+  --muted: #c4b5fd;
+  --nebula: radial-gradient(circle at center, #3b0a6d 0%, #1a042f 80%);
 }
 
+/* Reset */
 *{
   margin:0;
   padding:0;
@@ -23,10 +25,11 @@
 
 body{
   min-height:100vh;
-  background:#020617;
+  background:#01010f;
   color:var(--text);
   display:flex;
   justify-content:center;
+  align-items:flex-start;
   padding:70px 18px;
   overflow-x:hidden;
   position:relative;
@@ -38,20 +41,21 @@ body{
   position:fixed;
   inset:0;
   z-index:-3;
+  background:var(--nebula);
 }
 
 .ripple-layer{
   position:fixed;
   inset:0;
   z-index:-2;
-  background: radial-gradient(circle at center, rgba(139,92,246,0.15), transparent 70%);
-  animation:rippleMove 8s infinite alternate ease-in-out;
+  background: radial-gradient(circle at center, rgba(139,92,246,0.08), transparent 80%);
+  animation:rippleMove 10s infinite alternate ease-in-out;
   pointer-events:none;
 }
 
 @keyframes rippleMove{
   0%{transform:scale(1);}
-  100%{transform:scale(1.15);}
+  100%{transform:scale(1.2);}
 }
 
 /* ===== CARD ===== */
@@ -59,7 +63,7 @@ body{
 .card{
   width:100%;
   max-width:540px;
-  background:var(--glass);
+  background:rgba(20, 10, 45, 0.8);
   backdrop-filter:blur(40px) saturate(140%);
   -webkit-backdrop-filter:blur(40px) saturate(140%);
   border-radius:34px;
@@ -67,27 +71,25 @@ body{
   border:1px solid var(--border);
   box-shadow:
     0 0 0 1px rgba(255,255,255,.04),
-    0 40px 90px rgba(0,0,0,.65);
+    0 40px 90px rgba(75,0,130,.55);
   text-align:center;
 }
 
 /* Logo */
-
 .logo{
   width:130px;
   height:130px;
   border-radius:32px;
   margin-bottom:28px;
   border:1px solid rgba(255,255,255,.25);
-  box-shadow:0 0 35px rgba(139,92,246,.5);
+  box-shadow:0 0 45px rgba(139,92,246,.7);
 }
 
 /* Title */
-
 h1{
   font-size:2.1rem;
   margin-bottom:10px;
-  background:linear-gradient(90deg,#fff,#c4b5fd,#ddd6fe,#fff);
+  background:linear-gradient(90deg,#c084fc,#8b5cf6,#a78bfa,#c084fc);
   background-size:200%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -107,7 +109,6 @@ h1{
 }
 
 /* Buttons */
-
 .grid{
   display:grid;
   gap:18px;
@@ -125,7 +126,7 @@ h1{
 
 .install-btn:hover{
   transform:translateY(-6px);
-  box-shadow:0 15px 35px rgba(139,92,246,.4);
+  box-shadow:0 15px 35px rgba(139,92,246,.5);
   border-color:var(--primary);
 }
 
@@ -183,7 +184,6 @@ h1{
 
 <script>
 /* ===== STARFIELD ===== */
-
 const canvas = document.getElementById("starfield");
 const ctx = canvas.getContext("2d");
 
@@ -195,13 +195,14 @@ resize();
 window.addEventListener("resize", resize);
 
 let stars = [];
-for(let i=0;i<160;i++){
+for(let i=0;i<200;i++){
   stars.push({
     x:Math.random()*canvas.width,
     y:Math.random()*canvas.height,
-    r:Math.random()*1.4,
+    r:Math.random()*1.5,
     a:Math.random(),
-    s:Math.random()*0.02
+    s:Math.random()*0.02,
+    color:`hsl(270, 80%, ${Math.random()*50+50}%)`
   });
 }
 
@@ -214,7 +215,7 @@ function animate(){
 
     ctx.beginPath();
     ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${star.a})`;
+    ctx.fillStyle=`hsla(270, 80%, 80%, ${star.a})`;
     ctx.fill();
   });
 
@@ -223,17 +224,16 @@ function animate(){
 animate();
 
 /* ===== SHOOTING STARS ===== */
-
 function shootingStar(){
   const el=document.createElement("div");
   el.style.position="fixed";
-  el.style.top="-100px";
+  el.style.top="-120px";
   el.style.left=Math.random()*window.innerWidth+"px";
   el.style.width="2px";
   el.style.height="140px";
-  el.style.background="linear-gradient(white,transparent)";
+  el.style.background="linear-gradient(180deg, #c084fc, transparent)";
   el.style.transform="rotate(25deg)";
-  el.style.opacity="0.8";
+  el.style.opacity="0.9";
   el.style.zIndex="-1";
   el.style.transition="transform 4s linear, opacity 4s linear";
   document.body.appendChild(el);
@@ -247,11 +247,10 @@ function shootingStar(){
 }
 
 setInterval(()=>{
-  if(Math.random()>0.6) shootingStar();
-},5000);
+  if(Math.random()>0.5) shootingStar();
+},4000);
 
-/* ===== INSTALL ===== */
-
+/* ===== INSTALL BUTTONS ===== */
 document.querySelectorAll(".install-btn").forEach(btn=>{
   btn.addEventListener("click",()=>{
     const file=btn.dataset.file;
