@@ -9,26 +9,35 @@
 :root {
     --primary: #6366f1;
     --accent: #a855f7;
-    --bg-dark: #030712;
+    --bg-dark: #01000d;
     --glass: rgba(255, 255, 255, 0.03);
     --glass-border: rgba(255, 255, 255, 0.1);
     --text-main: #f8fafc;
     --text-dim: #64748b;
 }
 
-* { box-sizing: border-box; margin:0; padding:0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+/* Reset */
+* { box-sizing:border-box; margin:0; padding:0; font-family:'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
 
 body { 
-    background-color: var(--bg-dark);
-    background-image: radial-gradient(circle at 50% -20%, rgba(99, 102, 241, 0.2), transparent 80%), radial-gradient(circle at 0% 100%, rgba(168, 85, 247, 0.1), transparent 50%);
-    min-height: 100vh; display:flex; justify-content:center; align-items:flex-start; padding:20px; color:var(--text-main); overflow-x:hidden; position:relative;
+    background: var(--bg-dark); 
+    min-height: 100vh; 
+    display:flex; justify-content:center; align-items:flex-start; padding:20px; color:var(--text-main); 
+    overflow:hidden; position:relative;
 }
 
-/* Initial Loading Screen */
-#loader { position:fixed; inset:0; background: var(--bg-dark); display:flex; justify-content:center; align-items:center; z-index:9999; transition: opacity 0.8s, visibility 0.8s; }
+/* Canvas for background stars */
+#bg-canvas { position:fixed; inset:0; z-index:-2; }
 
-/* Installation Overlay */
-#install-overlay { position: fixed; inset:0; background: rgba(3,7,18,0.8); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:9000; opacity:0; visibility:hidden; transition: opacity 0.4s ease, visibility 0.4s; overflow:hidden; }
+/* Canvas for overlay stars */
+#overlay-stars { position:absolute; inset:0; z-index:100; pointer-events:none; }
+
+/* Overlay */
+#install-overlay { 
+    position: fixed; inset:0; background: rgba(3,7,18,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); 
+    display:flex; flex-direction:column; justify-content:center; align-items:center; z-index:9000; 
+    opacity:0; visibility:hidden; transition:opacity 0.4s, visibility 0.4s; overflow:hidden;
+}
 #install-overlay.active { opacity:1; visibility:visible; }
 
 .spinner-container { position:relative; width:50px; height:50px; margin-bottom:12px; }
@@ -37,30 +46,17 @@ body {
 
 .install-text { font-size:0.95rem; color: var(--text-main); font-weight:500; letter-spacing:0.02em; margin-bottom:20px; }
 
-.loaded #loader { opacity:0; visibility:hidden; }
-
 /* Main Card */
-.card {
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    border-radius:28px;
-    padding:40px 24px;
-    width:100%; max-width:500px;
-    text-align:center;
-    box-shadow: 0 0 0 1px var(--glass-border), 0 25px 50px -12px rgba(0,0,0,0.5);
-    opacity:0;
-    transform: translateY(30px) scale(0.95);
-    transition: opacity 1s, transform 1s;
-    margin-top:20px;
-    margin-bottom:40px;
-    position:relative;
-    z-index:1;
+.card { 
+    background: var(--glass); backdrop-filter:blur(20px); border-radius:28px; padding:40px 24px; width:100%; max-width:500px; 
+    text-align:center; box-shadow: 0 0 0 1px var(--glass-border), 0 25px 50px -12px rgba(0,0,0,0.5); 
+    opacity:0; transform:translateY(30px) scale(0.95); transition:opacity 1s, transform 1s; margin-top:20px; margin-bottom:40px; position:relative; z-index:1;
 }
-.loaded .card { opacity:1; transform: translateY(0) scale(1); }
+.loaded .card { opacity:1; transform:translateY(0) scale(1); }
 
 .logo-container { position:relative; display:inline-block; margin-bottom:24px; }
 .logo-glow { position:absolute; inset:-8px; background:linear-gradient(135deg,var(--primary),var(--accent)); filter:blur(15px); opacity:0.3; border-radius:35px; animation:logo-pulse 3s infinite alternate cubic-bezier(0.45,0.05,0.55,0.95); }
-@keyframes logo-pulse { from { transform:scale(0.9); opacity:0.2;} to { transform:scale(1.1); opacity:0.4; } }
+@keyframes logo-pulse { from { transform:scale(0.9); opacity:0.2;} to { transform:scale(1.1); opacity:0.4;} }
 
 .logo { position:relative; width:100px; height:100px; border-radius:28px; object-fit:cover; border:1px solid rgba(255,255,255,0.1); }
 
@@ -68,30 +64,24 @@ h1 { font-size:1.8rem; font-weight:700; letter-spacing:-0.03em; margin-bottom:8p
 .subtitle { color:var(--text-dim); margin-bottom:32px; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.15em; }
 
 .grid { display:grid; grid-template-columns:1fr; gap:12px; }
-@media (min-width:400px) { .grid { grid-template-columns:repeat(2,1fr); } }
+@media(min-width:400px){ .grid { grid-template-columns:repeat(2,1fr); } }
 
 .install-btn { position:relative; padding:18px 12px; border-radius:18px; color:white; background:rgba(255,255,255,0.04); border:1px solid var(--glass-border); display:flex; flex-direction:column; align-items:center; justify-content:center; overflow:hidden; transition:transform 0.3s, background 0.3s, border-color 0.3s; cursor:pointer; z-index:1; }
 .install-btn:active { transform:scale(0.92); background:rgba(255,255,255,0.08); border-color:var(--primary); }
 
 .ripple { position:absolute; border-radius:50%; pointer-events:none; transform:scale(0); animation:ripple-animation 0.6s ease-out forwards; z-index:0; background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, transparent 70%); }
-@keyframes ripple-animation { from { transform:scale(0); opacity:0.6; } to { transform:scale(4); opacity:0; } }
+@keyframes ripple-animation { from { transform:scale(0); opacity:0.6;} to { transform:scale(4); opacity:0;} }
 
 .btn-label, .btn-id { position:relative; z-index:2; pointer-events:none; }
 .btn-label { font-weight:600; font-size:0.9rem; }
 .btn-id { font-size:9px; color:var(--primary); font-family: monospace; margin-bottom:4px; opacity:0.8; letter-spacing:0.1em; }
 .footer { margin-top:40px; font-size:10px; color:var(--text-dim); letter-spacing:0.1em; text-transform:uppercase; opacity:0.5; }
-
-#overlay-stars { position:absolute; inset:0; z-index:100; pointer-events:none; }
 </style>
 </head>
 
 <body>
 
-<div id="loader">
-    <div class="spinner-container"><div class="spinner"></div></div>
-</div>
-
-<!-- Installation Overlay -->
+<canvas id="bg-canvas"></canvas>
 <div id="install-overlay">
     <canvas id="overlay-stars"></canvas>
     <div class="spinner-container"><div class="spinner"></div></div>
@@ -122,69 +112,85 @@ h1 { font-size:1.8rem; font-weight:700; letter-spacing:-0.03em; margin-bottom:8p
 </div>
 
 <script>
+// Reveal UI when loaded
 window.addEventListener('load', ()=>{ setTimeout(()=>document.body.classList.add('loaded'),400); });
 
-const buttons = document.querySelectorAll('.install-btn');
-const installOverlay = document.getElementById('install-overlay');
-const overlayCanvas = document.getElementById('overlay-stars');
-const ctx = overlayCanvas.getContext('2d');
+/* ===== BACKGROUND STARS + CLOUDS ===== */
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+function resizeBG(){ bgCanvas.width=window.innerWidth; bgCanvas.height=window.innerHeight; }
+resizeBG(); window.addEventListener('resize', resizeBG);
 
-function resizeCanvas() { overlayCanvas.width = window.innerWidth; overlayCanvas.height = window.innerHeight; }
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+let bgStars=[], clouds=[];
+for(let i=0;i<300;i++){ bgStars.push({ x:Math.random()*bgCanvas.width, y:Math.random()*bgCanvas.height, r:Math.random()*1.5, a:Math.random(), s:Math.random()*0.01+0.002 }); }
+for(let i=0;i<4;i++){ clouds.push({ x:Math.random()*bgCanvas.width, y:Math.random()*bgCanvas.height/2, r:bgCanvas.width*0.6, a:0.05+Math.random()*0.05, dx:0.05+Math.random()*0.1, dy:0.02+Math.random()*0.05 }); }
 
-// Overlay stars
-let stars = [];
-function createStars() {
-    stars = [];
-    for(let i=0;i<250;i++){
-        stars.push({x:Math.random()*overlayCanvas.width, y:Math.random()*overlayCanvas.height, r:Math.random()*1.2+0.3, a:Math.random(), s:Math.random()*0.005+0.002, fall:0.1+Math.random()*0.3});
-    }
-}
-
-let animating = false;
-function animateStars(){
-    if(!animating) return;
-    ctx.clearRect(0,0,overlayCanvas.width, overlayCanvas.height);
-    stars.forEach(star=>{
-        star.a+=star.s; if(star.a<=0||star.a>=1) star.s*=-1;
-        star.y+=star.fall; if(star.y>overlayCanvas.height) star.y=-2;
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r,0,Math.PI*2);
-        ctx.fillStyle=`hsla(270,80%,80%,${star.a})`;
-        ctx.fill();
+function animateBG(){
+    bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
+    clouds.forEach(c=>{
+        const grad=bgCtx.createRadialGradient(c.x,c.y,0,c.x,c.y,c.r);
+        grad.addColorStop(0,`rgba(139,92,246,${c.a})`);
+        grad.addColorStop(1,'rgba(0,0,0,0)');
+        bgCtx.fillStyle=grad;
+        bgCtx.fill();
+        c.x+=c.dx; c.y+=c.dy; 
+        if(c.x-c.r>bgCanvas.width) c.x=-c.r; 
+        if(c.y-c.r>bgCanvas.height) c.y=-c.r/2;
     });
-    requestAnimationFrame(animateStars);
+    bgStars.forEach(s=>{
+        s.a+=s.s; if(s.a<=0||s.a>=1) s.s*=-1;
+        bgCtx.beginPath(); bgCtx.arc(s.x,s.y,s.r,0,Math.PI*2); bgCtx.fillStyle=`hsla(270,80%,80%,${s.a})`; bgCtx.fill();
+    });
+    requestAnimationFrame(animateBG);
 }
+animateBG();
+
+/* ===== INSTALL OVERLAY STARS + FALLING ===== */
+const overlayCanvas = document.getElementById('overlay-stars');
+const overlayCtx = overlayCanvas.getContext('2d');
+function resizeOverlay(){ overlayCanvas.width=window.innerWidth; overlayCanvas.height=window.innerHeight; }
+resizeOverlay(); window.addEventListener('resize', resizeOverlay);
+
+let overlayStars=[];
+function createOverlayStars(){
+    overlayStars=[];
+    for(let i=0;i<200;i++){ overlayStars.push({ x:Math.random()*overlayCanvas.width, y:Math.random()*overlayCanvas.height, r:Math.random()*1.5, a:Math.random(), s:0.01+Math.random()*0.02, fall:0.2+Math.random()*0.3 }); }
+}
+let animating=false;
+function animateOverlay(){
+    if(!animating) return;
+    overlayCtx.clearRect(0,0,overlayCanvas.width,overlayCanvas.height);
+    overlayStars.forEach(s=>{
+        s.a+=s.s; if(s.a<=0||s.a>=1) s.s*=-1;
+        s.y+=s.fall; if(s.y>overlayCanvas.height) s.y=-2;
+        overlayCtx.beginPath(); overlayCtx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        overlayCtx.fillStyle=`hsla(270,80%,80%,${s.a})`; overlayCtx.fill();
+    });
+    requestAnimationFrame(animateOverlay);
+}
+
+/* ===== INSTALL BUTTONS ===== */
+const buttons=document.querySelectorAll('.install-btn');
+const installOverlay=document.getElementById('install-overlay');
 
 buttons.forEach(btn=>{
     btn.addEventListener('click', e=>{
         e.preventDefault();
-        let rect = btn.getBoundingClientRect();
-        let x = e.clientX - rect.left, y = e.clientY - rect.top;
+        const rect=btn.getBoundingClientRect();
+        const x=e.clientX-rect.left; const y=e.clientY-rect.top;
 
         // Ripple effect
-        const ripple = document.createElement('span');
-        ripple.className = 'ripple';
-        const size = Math.max(rect.width, rect.height)*2;
-        ripple.style.width = ripple.style.height = `${size}px`;
-        ripple.style.left = `${x-size/2}px`; ripple.style.top = `${y-size/2}px`;
-        btn.appendChild(ripple);
+        const ripple=document.createElement('span'); ripple.className='ripple';
+        const size=Math.max(rect.width,rect.height)*2; ripple.style.width=ripple.style.height=`${size}px`;
+        ripple.style.left=`${x-size/2}px`; ripple.style.top=`${y-size/2}px`; btn.appendChild(ripple);
         ripple.addEventListener('animationend', ()=>ripple.remove());
 
         // Show overlay
-        installOverlay.classList.add('active');
-        createStars(); animating=true; animateStars();
+        installOverlay.classList.add('active'); createOverlayStars(); animating=true; animateOverlay();
 
         // Trigger install
-        const url = btn.getAttribute('data-href');
-        if(url){ 
-            setTimeout(()=>{
-                window.location.href=url;
-                // AUTO CLOSE overlay after 3s, same as old closing mechanism
-                setTimeout(()=>{ installOverlay.classList.remove('active'); animating=false; },3000);
-            },150);
-        }
+        const url=btn.getAttribute('data-href');
+        if(url){ setTimeout(()=>{ window.location.href=url; setTimeout(()=>{ installOverlay.classList.remove('active'); animating=false; },3000); },150); }
     });
 });
 </script>
