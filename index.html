@@ -7,12 +7,12 @@
 
 <style>
 :root{
-  --glass: rgba(25, 15, 42, 0.72);
+  --glass: rgba(15, 10, 30, 0.75);
   --border: rgba(255,255,255,0.18);
   --primary: #8b5cf6;
   --text: #f8fafc;
-  --muted: #c4b5fd;
-  --nebula: radial-gradient(circle at center, #3b0a6d 0%, #1a042f 80%);
+  --muted: #9f7aea;
+  --nebula: radial-gradient(circle at center, #1b0a3b 0%, #0a0518 90%);
 }
 
 /* Reset */
@@ -25,7 +25,7 @@
 
 body{
   min-height:100vh;
-  background:#01010f;
+  background:#01000d;
   color:var(--text);
   display:flex;
   justify-content:center;
@@ -36,7 +36,6 @@ body{
 }
 
 /* ===== CANVAS BACKGROUND ===== */
-
 #starfield{
   position:fixed;
   inset:0;
@@ -48,22 +47,21 @@ body{
   position:fixed;
   inset:0;
   z-index:-2;
-  background: radial-gradient(circle at center, rgba(139,92,246,0.08), transparent 80%);
-  animation:rippleMove 10s infinite alternate ease-in-out;
+  background: radial-gradient(circle at center, rgba(139,92,246,0.05), transparent 80%);
+  animation:rippleMove 12s infinite alternate ease-in-out;
   pointer-events:none;
 }
 
 @keyframes rippleMove{
   0%{transform:scale(1);}
-  100%{transform:scale(1.2);}
+  100%{transform:scale(1.25);}
 }
 
 /* ===== CARD ===== */
-
 .card{
   width:100%;
   max-width:540px;
-  background:rgba(20, 10, 45, 0.8);
+  background:rgba(20, 10, 35, 0.85);
   backdrop-filter:blur(40px) saturate(140%);
   -webkit-backdrop-filter:blur(40px) saturate(140%);
   border-radius:34px;
@@ -71,7 +69,7 @@ body{
   border:1px solid var(--border);
   box-shadow:
     0 0 0 1px rgba(255,255,255,.04),
-    0 40px 90px rgba(75,0,130,.55);
+    0 40px 90px rgba(75,0,130,.45);
   text-align:center;
 }
 
@@ -89,7 +87,7 @@ body{
 h1{
   font-size:2.1rem;
   margin-bottom:10px;
-  background:linear-gradient(90deg,#c084fc,#8b5cf6,#a78bfa,#c084fc);
+  background:linear-gradient(90deg,#5b21b6,#7c3aed,#8b5cf6,#7c3aed);
   background-size:200%;
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -155,6 +153,18 @@ h1{
   color:var(--muted);
   opacity:.6;
 }
+
+/* ===== FALLING STAR DOTS ===== */
+.falling-dot{
+  position:fixed;
+  width:3px;
+  height:3px;
+  background:rgba(139,92,246,0.8);
+  border-radius:50%;
+  z-index:10;
+  pointer-events:none;
+  opacity:0.8;
+}
 </style>
 </head>
 <body>
@@ -201,54 +211,52 @@ for(let i=0;i<200;i++){
     y:Math.random()*canvas.height,
     r:Math.random()*1.5,
     a:Math.random(),
-    s:Math.random()*0.02,
-    color:`hsl(270, 80%, ${Math.random()*50+50}%)`
+    s:Math.random()*0.02
   });
 }
 
 function animate(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
   stars.forEach(star=>{
     star.a+=star.s;
     if(star.a<=0||star.a>=1) star.s*=-1;
 
     ctx.beginPath();
     ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-    ctx.fillStyle=`hsla(270, 80%, 80%, ${star.a})`;
+    ctx.fillStyle=`hsla(270,80%,80%,${star.a})`;
     ctx.fill();
   });
-
   requestAnimationFrame(animate);
 }
 animate();
 
-/* ===== SHOOTING STARS ===== */
-function shootingStar(){
-  const el=document.createElement("div");
-  el.style.position="fixed";
-  el.style.top="-120px";
-  el.style.left=Math.random()*window.innerWidth+"px";
-  el.style.width="2px";
-  el.style.height="140px";
-  el.style.background="linear-gradient(180deg, #c084fc, transparent)";
-  el.style.transform="rotate(25deg)";
-  el.style.opacity="0.9";
-  el.style.zIndex="-1";
-  el.style.transition="transform 4s linear, opacity 4s linear";
-  document.body.appendChild(el);
+/* ===== FALLING STAR DOTS ===== */
+function fallingDot(){
+  const dot=document.createElement("div");
+  dot.className="falling-dot";
+  dot.style.left=Math.random()*window.innerWidth+"px";
+  dot.style.top="-10px";
+  document.body.appendChild(dot);
 
-  setTimeout(()=>{
-    el.style.transform="translateY(120vh) rotate(25deg)";
-    el.style.opacity="0";
-  },100);
+  let speed = 1 + Math.random()*2;
+  let opacity = 0.7 + Math.random()*0.3;
+  dot.style.opacity = opacity;
 
-  setTimeout(()=>el.remove(),4000);
+  function move(){
+    let top = parseFloat(dot.style.top);
+    if(top < window.innerHeight){
+      dot.style.top = top + speed + "px";
+      requestAnimationFrame(move);
+    } else {
+      dot.remove();
+    }
+  }
+  move();
 }
 
 setInterval(()=>{
-  if(Math.random()>0.5) shootingStar();
-},4000);
+  if(Math.random()>0.5) fallingDot();
+},300);
 
 /* ===== INSTALL BUTTONS ===== */
 document.querySelectorAll(".install-btn").forEach(btn=>{
