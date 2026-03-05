@@ -22,8 +22,19 @@
 body { 
     background: var(--bg-dark); 
     min-height: 100vh; 
-    display:flex; justify-content:center; align-items:flex-start; padding:20px; color:var(--text-main); 
-    overflow:hidden; position:relative;
+    display:flex; 
+    justify-content:center; 
+    align-items:flex-start; 
+    padding:20px; 
+    color:var(--text-main); 
+    position:relative;
+
+    /* Enable scrolling */
+    overflow-y:auto;
+    overflow-x:hidden;
+
+    /* Smooth iOS scrolling */
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Canvas for background stars */
